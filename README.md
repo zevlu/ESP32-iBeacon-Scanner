@@ -5,14 +5,14 @@
 ## 🛠 系統架構與技術細節
 
 ### **發送端 (nRF52840)**
-* [cite_start]**核心機制**: 使用 Zephyr SDK `bt_le_adv_start()` 實作 [cite: 41, 45]。
-* [cite_start]**廣播模式**: `BT_LE_ADV_NCONN` (不可連線模式)，專為 iBeacon 設計以節省耗能 [cite: 51, 54, 55]。
-* [cite_start]**封包規格**: 遵循 Apple iBeacon 標準，包含 Company ID (`0x4C00`) 與 Type (`0x0215`) [cite: 18, 19, 76, 77]。
+* **核心機制**: 使用 Zephyr SDK `bt_le_adv_start()` 實作。
+* **廣播模式**: `BT_LE_ADV_NCONN` (不可連線模式)，專為 iBeacon 設計以節省耗能。
+* **封包規格**: 遵循 Apple iBeacon 標準，包含 Company ID (`0x4C00`) 與 Type (`0x0215`)。
 
 ### **接收端 (Gateway - ESP32)**
-* [cite_start]**掃描防護**: 實作 `len < 30` 封包長度檢查，有效過濾非法封包防止系統崩潰 (Panic) [cite: 52, 62, 63]。
-* [cite_start]**身分還原**: 針對特定 UUID 進行 ASCII 對位解密（如：`5A 65 76` -> `Zev`） [cite: 15, 22, 102]。
-* [cite_start]**雲端對接**: 數據打包成 JSON 格式並發送至 MQTT Broker (`test.mosquitto.org`) [cite: 105, 106, 132]。
+* **掃描防護**: 實作 `len < 30` 封包長度檢查，有效過濾非法封包防止系統崩潰 (Panic)。
+* **身分還原**: 針對特定 UUID 進行 ASCII 對位解密（如：`5A 65 76` -> `Zev`）。
+* **雲端對接**: 數據打包成 JSON 格式並發送至 MQTT Broker (`test.mosquitto.org`)。
 
 ---
 
@@ -20,8 +20,8 @@
 
 ### **[Week 3] 輪播、解密與系統防護**
 * **技術重點**:
-    * [cite_start]**Nordic**: 實作 3 秒動態輪播機制，在「普通組」與「Zev加密組」之間切換 [cite: 28, 43, 48]。
-    * [cite_start]**ESP32**: 實作 Heap Memory 監測，系統運作時穩定維持於約 **87KB** 剩餘空間 [cite: 104, 135, 185]。
+    * **Nordic**: 實作 3 秒動態輪播機制，在「普通組」與「Zev加密組」之間切換。
+    * **ESP32**: 實作 Heap Memory 監測，系統運作時穩定維持於約 **87KB** 剩餘空間。
 * **實驗報告**: [📑 查看本週完整 PDF 報告](./Week3/Nordic實作第三周.pdf)
 
 ### **[Week 2] 基礎掃描與廣播**
@@ -33,6 +33,6 @@
 ## 📊 系統時序圖
 本專案的資料流向如下圖所示：
 
-1. [cite_start]**Nordic** 輪流廣播不同 UUID 的 iBeacon 訊號 [cite: 197, 204]。
-2. [cite_start]**ESP32** 掃描並過濾 Major/Minor 匹配之設備 [cite: 200, 206]。
-3. [cite_start]**ESP32** 執行解密並監測記憶體後，將 JSON 數據送往 **MQTT Broker** [cite: 208, 209, 210]。
+1. **Nordic** 輪流廣播不同 UUID 的 iBeacon 訊號。
+2. **ESP32** 掃描並過濾 Major/Minor 匹配之設備。
+3. **ESP32** 執行解密並監測記憶體後，將 JSON 數據送往 **MQTT Broker**。
